@@ -11,6 +11,9 @@ export type AppStackParamList = {
   Location: {
     slot: ParkingSlot;
   };
+  ParkingSlots: {
+    slot: ParkingSlot;
+  };
   EditAccount: undefined;
 };
 
@@ -21,4 +24,5 @@ export type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, 'Login
 
 export type DashboardScreenProps = NativeStackScreenProps<AppStackParamList, 'Dashboard'>;
 export type LocationScreenProps = NativeStackScreenProps<AppStackParamList, 'Location'>;
+export type ParkingSlotsScreenProps = NativeStackScreenProps<AppStackParamList, 'ParkingSlots'>;
 export type EditAccountScreenProps = NativeStackScreenProps<AppStackParamList, 'EditAccount'>;

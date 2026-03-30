@@ -18,6 +18,7 @@ const DashboardScreen = ({ navigation }: Props) => {
     <ParkingSlotCard
       slot={item}
       onPressLink={() => navigation.navigate('Location', { slot: item })}
+      onPressViewSlots={() => navigation.navigate('ParkingSlots', { slot: item })}
     />
   );
 
@@ -58,15 +59,12 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     marginBottom: spacing.md,
-
-    
   },
   summaryCard: {
     backgroundColor: colors.primary,
     borderRadius: 20,
     padding: spacing.lg,
     marginTop: spacing.lg,
-    
   },
   summaryTitle: {
     color: colors.surface,
@@ -89,7 +87,6 @@ const styles = StyleSheet.create({
   separator: {
     height: spacing.md,
   },
-
 });
 
 export default DashboardScreen;

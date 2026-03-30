@@ -4,4 +4,6 @@ const mockUser = {
   password: '123456',
 };
 
+
+
 export default mockUser;

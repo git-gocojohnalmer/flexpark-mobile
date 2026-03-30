@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardScreen from '../screens/app/DashboardScreen';
 import EditAccountScreen from '../screens/app/EditAccountScreen';
 import LocationScreen from '../screens/app/LocationScreen';
+import ParkingSlotsScreen from '../screens/app/ParkingSlotsScreen';
 import type { AppStackParamList } from '../types/navigation';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -18,6 +19,11 @@ const AppStack = () => {
         name="Location"
         component={LocationScreen}
         options={{ title: 'Parking Location' }}
+      />
+      <Stack.Screen
+        name="ParkingSlots"
+        component={ParkingSlotsScreen}
+        options={{ title: 'Parking Slots' }}
       />
       <Stack.Screen
         name="EditAccount"

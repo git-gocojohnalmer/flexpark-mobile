@@ -1,14 +1,4 @@
-type ParkingSlot = {
-  id: string;
-  locationName: string;
-  status: 'Available' | 'Occupied';
-  distance: string;
-  rate: string;
-  coordinate: {
-    latitude: number;
-    longitude: number;
-  };
-};
+import type { ParkingSlot } from '../types/parking';
 
 const mockSlots: ParkingSlot[] = [
   {
@@ -21,6 +11,16 @@ const mockSlots: ParkingSlot[] = [
       latitude: -6.21462,
       longitude: 106.84513,
     },
+    availableSlotCount: 4,
+    totalSlotCount: 6,
+    slots: [
+      { id: 'slot-1-space-1', label: 'A1', status: 'Available' },
+      { id: 'slot-1-space-2', label: 'A2', status: 'Occupied' },
+      { id: 'slot-1-space-3', label: 'A3', status: 'Available' },
+      { id: 'slot-1-space-4', label: 'A4', status: 'Occupied' },
+      { id: 'slot-1-space-5', label: 'A5', status: 'Available' },
+      { id: 'slot-1-space-6', label: 'A6', status: 'Available' },
+    ],
   },
   {
     id: 'slot-2',
@@ -32,6 +32,18 @@ const mockSlots: ParkingSlot[] = [
       latitude: -6.19688,
       longitude: 106.82299,
     },
+    availableSlotCount: 1,
+    totalSlotCount: 8,
+    slots: [
+      { id: 'slot-2-space-1', label: 'B1', status: 'Occupied' },
+      { id: 'slot-2-space-2', label: 'B2', status: 'Occupied' },
+      { id: 'slot-2-space-3', label: 'B3', status: 'Occupied' },
+      { id: 'slot-2-space-4', label: 'B4', status: 'Available' },
+      { id: 'slot-2-space-5', label: 'B5', status: 'Occupied' },
+      { id: 'slot-2-space-6', label: 'B6', status: 'Occupied' },
+      { id: 'slot-2-space-7', label: 'B7', status: 'Occupied' },
+      { id: 'slot-2-space-8', label: 'B8', status: 'Occupied' },
+    ],
   },
   {
     id: 'slot-3',
@@ -43,6 +55,20 @@ const mockSlots: ParkingSlot[] = [
       latitude: -6.22501,
       longitude: 106.79911,
     },
+    availableSlotCount: 5,
+    totalSlotCount: 10,
+    slots: [
+      { id: 'slot-3-space-1', label: 'C1', status: 'Available' },
+      { id: 'slot-3-space-2', label: 'C2', status: 'Available' },
+      { id: 'slot-3-space-3', label: 'C3', status: 'Occupied' },
+      { id: 'slot-3-space-4', label: 'C4', status: 'Occupied' },
+      { id: 'slot-3-space-5', label: 'C5', status: 'Available' },
+      { id: 'slot-3-space-6', label: 'C6', status: 'Occupied' },
+      { id: 'slot-3-space-7', label: 'C7', status: 'Available' },
+      { id: 'slot-3-space-8', label: 'C8', status: 'Occupied' },
+      { id: 'slot-3-space-9', label: 'C9', status: 'Available' },
+      { id: 'slot-3-space-10', label: 'C10', status: 'Occupied' },
+    ],
   },
   {
     id: 'slot-4',
@@ -54,6 +80,15 @@ const mockSlots: ParkingSlot[] = [
       latitude: -6.22343,
       longitude: 106.83061,
     },
+    availableSlotCount: 0,
+    totalSlotCount: 5,
+    slots: [
+      { id: 'slot-4-space-1', label: 'D1', status: 'Occupied' },
+      { id: 'slot-4-space-2', label: 'D2', status: 'Occupied' },
+      { id: 'slot-4-space-3', label: 'D3', status: 'Occupied' },
+      { id: 'slot-4-space-4', label: 'D4', status: 'Occupied' },
+      { id: 'slot-4-space-5', label: 'D5', status: 'Occupied' },
+    ],
   },
   {
     id: 'slot-5',
@@ -65,6 +100,22 @@ const mockSlots: ParkingSlot[] = [
       latitude: -6.24467,
       longitude: 106.80048,
     },
+    availableSlotCount: 7,
+    totalSlotCount: 12,
+    slots: [
+      { id: 'slot-5-space-1', label: 'E1', status: 'Available' },
+      { id: 'slot-5-space-2', label: 'E2', status: 'Occupied' },
+      { id: 'slot-5-space-3', label: 'E3', status: 'Available' },
+      { id: 'slot-5-space-4', label: 'E4', status: 'Available' },
+      { id: 'slot-5-space-5', label: 'E5', status: 'Occupied' },
+      { id: 'slot-5-space-6', label: 'E6', status: 'Available' },
+      { id: 'slot-5-space-7', label: 'E7', status: 'Occupied' },
+      { id: 'slot-5-space-8', label: 'E8', status: 'Available' },
+      { id: 'slot-5-space-9', label: 'E9', status: 'Available' },
+      { id: 'slot-5-space-10', label: 'E10', status: 'Occupied' },
+      { id: 'slot-5-space-11', label: 'E11', status: 'Available' },
+      { id: 'slot-5-space-12', label: 'E12', status: 'Occupied' },
+    ],
   },
 ];
 

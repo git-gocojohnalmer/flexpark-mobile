@@ -12,7 +12,7 @@ const Header = ({ name, onPressSettings }: HeaderProps) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.caption}>Welcome back</Text>
+        <Text style={styles.caption}>Hello</Text>
         <Text style={styles.title}>{name}</Text>
       </View>
 
