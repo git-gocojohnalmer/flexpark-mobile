@@ -36,7 +36,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             <View style={styles.summaryCard}>
               <Text style={styles.summaryTitle}>Nearby Parking Availability</Text>
               <Text style={styles.summaryText}>
-                Explore live slot status and tap any location to view it on the map.
+                Explore live slot status and tap  any location to view it on the map.
               </Text>
             </View>
             <Text style={styles.sectionTitle}>Available locations</Text>
