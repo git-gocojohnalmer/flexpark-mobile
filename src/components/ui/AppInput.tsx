@@ -34,17 +34,17 @@ const styles = StyleSheet.create({
   label: {
     color: colors.text,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: spacing.xs,
   },
   input: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
+    backgroundColor: '#F8FBFF',
+    borderColor: '#D7E6F7',
     borderRadius: radius.md,
     borderWidth: 1,
     color: colors.text,
     fontSize: 15,
-    minHeight: 52,
+    minHeight: 54,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontSize: 12,
     marginTop: spacing.xs,
+    fontWeight: '600',
   },
 });
 

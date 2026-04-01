@@ -69,20 +69,32 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: radius.md,
     justifyContent: 'center',
-    minHeight: 52,
+    minHeight: 54,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
+    shadowColor: '#1D4ED8',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.14,
+    shadowRadius: 16,
+    elevation: 4,
   },
   secondaryButton: {
     backgroundColor: colors.surface,
     borderColor: colors.primary,
     borderWidth: 1,
+    shadowColor: 'transparent',
+    elevation: 0,
   },
   ghostButton: {
     backgroundColor: 'transparent',
+    shadowColor: 'transparent',
+    elevation: 0,
+    minHeight: 40,
+    paddingVertical: spacing.sm,
   },
   pressed: {
     opacity: 0.92,
+    transform: [{ scale: 0.99 }],
   },
   disabled: {
     opacity: 0.55,
@@ -90,7 +102,8 @@ const styles = StyleSheet.create({
   label: {
     color: colors.surface,
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   secondaryLabel: {
     color: colors.primary,

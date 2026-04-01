@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors, radius, shadows, spacing } from '../../theme';
+import { colors, radius, shadows, spacing, typography } from '../../theme';
 
 type ParkingSpace = {
   id: string;
@@ -50,13 +50,16 @@ const ParkingSlotCard = ({
             <MaterialCommunityIcons
               color={colors.primary}
               name="parking"
-              size={18}
+              size={20}
             />
           </View>
 
           <View style={styles.titleTextWrap}>
-            <Text style={styles.eyebrow}>Smart Parking Zone</Text>
+            <Text style={styles.eyebrow}>FleXpark Hub</Text>
             <Text style={styles.locationName}>{slot.locationName}</Text>
+            <Text style={styles.subcopy}>
+              {isAvailable ? 'Spaces ready for arrival' : 'Currently operating at full demand'}
+            </Text>
           </View>
         </View>
 
@@ -90,6 +93,7 @@ const ParkingSlotCard = ({
             <Text style={styles.metricLabel}>Distance</Text>
           </View>
           <Text style={styles.metricValue}>{slot.distance}</Text>
+          <Text style={styles.metricHint}>From your current route</Text>
         </View>
 
         <View style={styles.metricCard}>
@@ -98,15 +102,16 @@ const ParkingSlotCard = ({
             <Text style={styles.metricLabel}>Rate</Text>
           </View>
           <Text style={styles.metricValue}>{slot.rate}</Text>
+          <Text style={styles.metricHint}>Transparent parking fee</Text>
         </View>
       </View>
 
       <View style={styles.availabilityCard}>
         <View style={styles.availabilityHeader}>
-          <View>
+          <View style={styles.availabilityTextWrap}>
             <Text style={styles.summaryLabel}>Live Availability</Text>
             <Text style={styles.summaryValue}>
-              {availableSlots} of {totalSlots} slots available
+              {availableSlots} of {totalSlots} slots open now
             </Text>
           </View>
 
@@ -121,7 +126,9 @@ const ParkingSlotCard = ({
 
         <View style={styles.progressFooter}>
           <Text style={styles.progressCaption}>Available</Text>
-          <Text style={styles.progressCaption}>{Math.round(availabilityRatio * 100)}% capacity ready</Text>
+          <Text style={styles.progressCaption}>
+            {Math.round(availabilityRatio * 100)}% ready
+          </Text>
         </View>
       </View>
 
@@ -149,7 +156,7 @@ const ParkingSlotCard = ({
           ]}
         >
           <Feather color={colors.primary} name="navigation" size={16} />
-          <Text style={styles.linkText}>Link</Text>
+          <Text style={styles.linkText}>View Map</Text>
         </Pressable>
       </View>
     </View>
@@ -160,9 +167,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     borderWidth: 1,
     marginBottom: spacing.md,
+    overflow: 'hidden',
     padding: spacing.lg,
     ...shadows.card,
   },
@@ -173,7 +181,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   titleSection: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
     flexDirection: 'row',
     marginRight: spacing.md,
@@ -181,29 +189,38 @@ const styles = StyleSheet.create({
   locationIconWrap: {
     alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius: radius.md,
-    height: 40,
+    borderRadius: radius.lg,
+    height: 48,
     justifyContent: 'center',
     marginRight: spacing.sm,
-    width: 40,
+    width: 48,
   },
   titleTextWrap: {
     flex: 1,
+    paddingTop: 2,
   },
   eyebrow: {
-    color: colors.textSecondary,
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 2,
+    color: colors.primary,
+    fontSize: typography.caption,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    marginBottom: 4,
     textTransform: 'uppercase',
   },
   locationName: {
     color: colors.text,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  subcopy: {
+    color: colors.textSecondary,
+    fontSize: typography.body,
+    lineHeight: 20,
   },
   statusPill: {
     alignItems: 'center',
+    alignSelf: 'flex-start',
     borderRadius: radius.pill,
     flexDirection: 'row',
     paddingHorizontal: spacing.sm,
@@ -228,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.danger,
   },
   statusText: {
-    fontSize: 12,
+    fontSize: typography.caption,
     fontWeight: '700',
   },
   availableText: {
@@ -244,7 +261,9 @@ const styles = StyleSheet.create({
   },
   metricCard: {
     backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
     flex: 1,
     padding: spacing.md,
   },
@@ -256,16 +275,25 @@ const styles = StyleSheet.create({
   metricLabel: {
     color: colors.textSecondary,
     fontSize: 13,
+    fontWeight: '600',
     marginLeft: 6,
   },
   metricValue: {
     color: colors.text,
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  metricHint: {
+    color: colors.textSecondary,
+    fontSize: typography.caption,
+    lineHeight: 18,
   },
   availabilityCard: {
     backgroundColor: colors.background,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
     marginBottom: spacing.lg,
     padding: spacing.md,
   },
@@ -275,15 +303,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: spacing.sm,
   },
+  availabilityTextWrap: {
+    flex: 1,
+    marginRight: spacing.sm,
+  },
   summaryLabel: {
     color: colors.textSecondary,
     fontSize: 13,
+    fontWeight: '600',
     marginBottom: spacing.xs,
   },
   summaryValue: {
     color: colors.text,
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '800',
+    lineHeight: 22,
   },
   capacityChip: {
     backgroundColor: colors.surface,
@@ -293,7 +327,7 @@ const styles = StyleSheet.create({
   },
   capacityChipText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: typography.caption,
     fontWeight: '700',
   },
   progressTrack: {
@@ -314,7 +348,7 @@ const styles = StyleSheet.create({
   },
   progressCaption: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: typography.caption,
     fontWeight: '600',
   },
   actionsRow: {
@@ -327,6 +361,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    minHeight: 48,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
@@ -341,13 +376,13 @@ const styles = StyleSheet.create({
   viewSlotsText: {
     color: colors.white,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '800',
     marginLeft: spacing.xs,
   },
   linkText: {
     color: colors.primary,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '800',
     marginLeft: spacing.xs,
   },
   primaryPressed: {
