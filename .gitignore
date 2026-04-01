@@ -1,0 +1,15 @@
+# Ignore the massive library folder
+node_modules/
+
+# Ignore Expo's internal settings
+.expo/
+dist/
+web-build/
+
+# Ignore local environment files
+.env
+.env.local
+
+# Ignore system junk
+Thumbs.db
+.DS_Store
