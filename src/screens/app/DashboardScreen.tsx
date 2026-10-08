@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Linking,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -57,39 +58,13 @@ const DashboardScreen = ({ navigation }: Props) => {
     },
   ];
 
-  const quickActions = [
-    {
-      id: 'map',
-      label: 'Open map',
-      icon: 'map-outline' as const,
-      onPress: () => {
-        if (nearestSpot) {
-          navigation.navigate('Location', { slot: nearestSpot });
-        }
-      },
-    },
-    {
-      id: 'slots',
-      label: 'View slots',
-      icon: 'grid-outline' as const,
-      onPress: () => {
-        if (nearestSpot) {
-          navigation.navigate('ParkingSlots', { slot: nearestSpot });
-        }
-      },
-    },
-    {
-      id: 'account',
-      label: 'Account',
-      icon: 'settings-outline' as const,
-      onPress: () => navigation.navigate('EditAccount'),
-    },
-  ];
-
   const renderItem = ({ item }: { item: ParkingSlot }) => (
     <ParkingSlotCard
       slot={item}
-      onPressLink={() => navigation.navigate('Location', { slot: item })}
+      onPressLink={async () => {
+        const mapsUrl = item.mapLink ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.locationName)}`;
+        await Linking.openURL(mapsUrl);
+      }}
       onPressViewSlots={() => navigation.navigate('ParkingSlots', { slot: item })}
     />
   );
@@ -129,20 +104,9 @@ const DashboardScreen = ({ navigation }: Props) => {
               <View style={styles.heroGlowPrimary} />
               <View style={styles.heroGlowSecondary} />
 
-              <View style={styles.heroTopRow}>
-                <View style={styles.heroBadge}>
-                  <Ionicons name="flash-outline" size={14} color={colors.white} />
-                  <Text style={styles.heroBadgeText}>FleXpark live</Text>
-                </View>
-                <View style={styles.heroSignal}>
-                  <Ionicons name="radio-outline" size={14} color="#BAE6FD" />
-                  <Text style={styles.heroSignalText}>Real-time sync</Text>
-                </View>
-              </View>
-
-              <Text style={styles.heroTitle}>Your parking command center</Text>
+              <Text style={styles.heroTitle}>Parking operations</Text>
               <Text style={styles.heroSubtitle}>
-                Track nearby availability, jump into the map, and move faster with a live view of every active zone.
+                Monitor availability, spot status, and layout health across active parking zones.
               </Text>
 
               <View style={styles.heroHighlightsRow}>
@@ -150,14 +114,7 @@ const DashboardScreen = ({ navigation }: Props) => {
                   <Text style={styles.heroHighlightValue}>
                     {isLoading ? '...' : totalAvailableSpaces}
                   </Text>
-                  <Text style={styles.heroHighlightLabel}>spaces open now</Text>
-                </View>
-                <View style={styles.heroHighlightDivider} />
-                <View style={styles.heroHighlightCard}>
-                  <Text style={styles.heroHighlightValue}>
-                    {isLoading ? '...' : (nearestSpot?.distance ?? '--')}
-                  </Text>
-                  <Text style={styles.heroHighlightLabel}>closest live spot</Text>
+                  <Text style={styles.heroHighlightLabel}>open spaces</Text>
                 </View>
               </View>
             </View>
@@ -188,36 +145,13 @@ const DashboardScreen = ({ navigation }: Props) => {
               ))}
             </View>
 
-            <View style={styles.actionsSection}>
-              <Text style={styles.actionsTitle}>Quick actions</Text>
-              <View style={styles.actionsRow}>
-                {quickActions.map((action) => (
-                  <Pressable
-                    key={action.id}
-                    onPress={action.onPress}
-                    style={({ pressed }) => [styles.actionButton, pressed && styles.actionButtonPressed]}
-                  >
-                    <View style={styles.actionIconWrap}>
-                      <Ionicons name={action.icon} size={20} color={colors.primary} />
-                    </View>
-                    <Text style={styles.actionLabel}>{action.label}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-
             <View style={styles.listHeaderRow}>
               <View>
                 <Text style={styles.sectionTitle}>Nearby live parking</Text>
                 <Text style={styles.sectionSubtitle}>
                   {isLoading
-                    ? 'Loading monitored parking locations...'
-                    : `${totalAvailableSpaces} open spaces right now`}
-                </Text>
-              </View>
-              <View style={styles.sectionBadge}>
-                <Text style={styles.sectionBadgeText}>
-                  {isLoading ? 'Syncing...' : 'Updated now'}
+                    ? 'Loading parking locations...'
+                    : `${totalAvailableSpaces} open spaces available`}
                 </Text>
               </View>
             </View>
@@ -246,10 +180,10 @@ const styles = StyleSheet.create({
   heroCard: {
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.dark,
     borderRadius: radius.xl,
     padding: spacing.lg,
-    marginTop: spacing.lg,
+    marginTop: spacing.md,
     ...shadows.card,
   },
   heroGlowPrimary: {
@@ -259,7 +193,7 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: 'rgba(125, 211, 252, 0.25)',
+    backgroundColor: 'rgba(249, 115, 22, 0.18)',
   },
   heroGlowSecondary: {
     position: 'absolute',
@@ -268,53 +202,21 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderRadius: 65,
-    backgroundColor: 'rgba(34, 197, 94, 0.16)',
-  },
-  heroTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.lg,
-    gap: spacing.sm,
-  },
-  heroBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    alignSelf: 'flex-start',
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 8,
-    backgroundColor: 'rgba(255,255,255,0.16)',
-  },
-  heroBadgeText: {
-    color: colors.white,
-    fontSize: typography.caption,
-    fontWeight: '700',
-  },
-  heroSignal: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  heroSignalText: {
-    color: '#DBEAFE',
-    fontSize: typography.caption,
-    fontWeight: '600',
+    backgroundColor: 'rgba(255,255,255,0.05)',
   },
   heroTitle: {
     color: colors.white,
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
     maxWidth: '82%',
   },
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.88)',
+    color: 'rgba(255,255,255,0.78)',
     fontSize: typography.body,
-    lineHeight: 21,
-    marginBottom: spacing.lg,
+    lineHeight: 20,
+    marginBottom: spacing.md,
     maxWidth: '92%',
   },
   heroHighlightsRow: {
@@ -322,16 +224,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: radius.lg,
     padding: spacing.md,
-    backgroundColor: 'rgba(15, 23, 42, 0.14)',
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
   heroHighlightCard: {
     flex: 1,
-  },
-  heroHighlightDivider: {
-    width: 1,
-    alignSelf: 'stretch',
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    marginHorizontal: spacing.md,
   },
   heroHighlightValue: {
     color: colors.white,
@@ -385,13 +283,13 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: colors.border,
     ...shadows.card,
   },
   statIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 34,
+    height: 34,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
@@ -414,56 +312,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 16,
   },
-  actionsSection: {
-    marginTop: spacing.lg,
-  },
-  actionsTitle: {
-    color: colors.text,
-    fontSize: 17,
-    fontWeight: '700',
-    marginBottom: spacing.sm,
-  },
-  actionsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  actionButton: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-    ...shadows.card,
-  },
-  actionButtonPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.98 }],
-  },
-  actionIconWrap: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#EFF6FF',
-    marginBottom: spacing.sm,
-  },
-  actionLabel: {
-    color: colors.text,
-    fontSize: typography.caption,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
   listHeaderRow: {
     marginTop: spacing.xl,
     marginBottom: spacing.sm,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: spacing.md,
   },
   sectionTitle: {
     color: colors.text,
@@ -476,17 +327,6 @@ const styles = StyleSheet.create({
     fontSize: typography.body,
     lineHeight: 20,
     maxWidth: 240,
-  },
-  sectionBadge: {
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 8,
-    backgroundColor: '#E0F2FE',
-  },
-  sectionBadgeText: {
-    color: '#0369A1',
-    fontSize: typography.caption,
-    fontWeight: '700',
   },
   separator: {
     height: spacing.md,

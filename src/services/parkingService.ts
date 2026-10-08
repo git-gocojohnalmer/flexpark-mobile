@@ -55,8 +55,16 @@ const getNormalizedMapLink = (googleMapsLink?: string): string | undefined => {
   const decodedValue = decodeHtmlEntities(googleMapsLink.trim());
   const iframeSrcMatch = decodedValue.match(/src\s*=\s*(?:"([^"]+)"|'([^']+)')/i);
   const normalizedValue = iframeSrcMatch?.[1] ?? iframeSrcMatch?.[2] ?? decodedValue;
+  const trimmedValue = normalizedValue.trim();
 
-  return normalizedValue.trim();
+  if (!trimmedValue) return undefined;
+
+  const iframeWrapMatch = trimmedValue.match(/^<iframe[^>]+src=["']([^"']+)["'][^>]*><\/iframe>$/i);
+  if (iframeWrapMatch?.[1]) {
+    return iframeWrapMatch[1].trim();
+  }
+
+  return trimmedValue;
 };
 
 const toCoordinate = (latitude: number, longitude: number): ParkingCoordinate => {
@@ -94,22 +102,18 @@ const getCoordinateFromLink = (googleMapsLink?: string): ParkingCoordinate => {
   return EMPTY_COORDINATE;
 };
 
-const getEmbedUrlFromLink = (googleMapsLink?: string): string | undefined => {
-  const normalizedMapLink = getNormalizedMapLink(googleMapsLink);
-  if (!normalizedMapLink) return undefined;
-
-  // Only return URLs that are already Google Maps embed URLs — these render
-  // inside an iframe/WebView with the exact pin Google itself shows.
-  if (/^https?:\/\/(www\.)?google\.com\/maps\/embed\?/i.test(normalizedMapLink)) {
-    return normalizedMapLink;
-  }
-
-  return undefined;
-};
-
 const getPlaceQueryFromLink = (googleMapsLink?: string): string | undefined => {
   const normalizedMapLink = getNormalizedMapLink(googleMapsLink);
   if (!normalizedMapLink) return undefined;
+
+  const queryMatch = normalizedMapLink.match(/[?&](?:q|query)=([^&#]+)/i);
+  if (queryMatch) {
+    try {
+      return decodeURIComponent(queryMatch[1].replace(/\+/g, ' ')).trim();
+    } catch {
+      return queryMatch[1].replace(/\+/g, ' ').trim();
+    }
+  }
 
   const placeMatch = normalizedMapLink.match(/!2s([^!]+)/);
   if (!placeMatch) {
@@ -121,6 +125,42 @@ const getPlaceQueryFromLink = (googleMapsLink?: string): string | undefined => {
   } catch {
     return placeMatch[1].replace(/\+/g, ' ').trim();
   }
+};
+
+const getEmbedUrlFromLink = (
+  googleMapsLink?: string,
+  locationName: string = '',
+  coordinate: ParkingCoordinate = EMPTY_COORDINATE,
+): string | undefined => {
+  const normalizedMapLink = getNormalizedMapLink(googleMapsLink);
+  if (!normalizedMapLink) {
+    if (coordinate.latitude !== 0 || coordinate.longitude !== 0) {
+      return `https://www.google.com/maps?q=${coordinate.latitude},${coordinate.longitude}&output=embed`;
+    }
+    if (locationName) {
+      return `https://www.google.com/maps?q=${encodeURIComponent(locationName)}&output=embed`;
+    }
+    return undefined;
+  }
+
+  const isGoogleMapsEmbed = /^https?:\/\/(?:www\.)?(?:google\.[a-z.]+|maps\.google\.[a-z.]+)\/maps\/(?:embed|preview|place)\??/i.test(normalizedMapLink)
+    || /(?:\?|&)output=embed/i.test(normalizedMapLink)
+    || /google\.com\/maps\/embed\?/i.test(normalizedMapLink);
+
+  if (isGoogleMapsEmbed) {
+    return normalizedMapLink;
+  }
+
+  if (coordinate.latitude !== 0 || coordinate.longitude !== 0) {
+    return `https://www.google.com/maps?q=${coordinate.latitude},${coordinate.longitude}&output=embed`;
+  }
+
+  const placeQuery = getPlaceQueryFromLink(googleMapsLink) || locationName;
+  if (placeQuery) {
+    return `https://www.google.com/maps?q=${encodeURIComponent(placeQuery)}&output=embed`;
+  }
+
+  return undefined;
 };
 
 const buildMapsUrl = (googleMapsLink: string | undefined, locationName: string, coordinate: ParkingCoordinate): string | undefined => {
@@ -233,7 +273,7 @@ export const fetchParkingSlots = async (): Promise<ParkingSlot[]> => {
         rate: 'Free',
         coordinate,
         mapLink: buildMapsUrl(lot.googleMapsLink, lot.locationName, coordinate),
-        embedUrl: getEmbedUrlFromLink(lot.googleMapsLink),
+        embedUrl: getEmbedUrlFromLink(lot.googleMapsLink, lot.locationName, coordinate),
         availableSlotCount,
         totalSlotCount: slots.length > 0 ? slots.length : lot.totalSpace,
         slots,

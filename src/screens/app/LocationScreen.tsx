@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Linking, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React from 'react';
+import { Linking, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import type { AppStackParamList } from '../../types/navigation';
@@ -10,14 +9,12 @@ type Props = NativeStackScreenProps<AppStackParamList, 'Location'>;
 
 const LocationScreen = ({ route }: Props) => {
   const { slot } = route.params;
-  const [webViewLoading, setWebViewLoading] = useState(true);
 
   const availableCount = slot.availableSlotCount;
   const totalCount = slot.totalSlotCount;
   const reservedCount = slot.slots.filter((parkingSpace) => parkingSpace.status === 'Reserved').length;
   const occupiedCount = Math.max(totalCount - availableCount - reservedCount, 0);
   const isReserved = slot.status === 'Reserved';
-  const embedUrl = slot.embedUrl;
   const mapsUrl = slot.mapLink;
 
   const handleOpenDirections = async () => {
@@ -107,40 +104,17 @@ const LocationScreen = ({ route }: Props) => {
 
         <View style={styles.mapCard}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Parking map preview</Text>
-            <Text style={styles.sectionSubtitle}>Live Google Maps view of the saved location.</Text>
+            <Text style={styles.sectionTitle}>Location details</Text>
+            <Text style={styles.sectionSubtitle}>Use directions to open this place in Google Maps.</Text>
           </View>
 
-          {embedUrl ? (
-            <View style={styles.mapWrapper}>
-              <WebView
-                source={{ uri: embedUrl }}
-                style={styles.map}
-                onLoadStart={() => setWebViewLoading(true)}
-                onLoadEnd={() => setWebViewLoading(false)}
-                scrollEnabled={false}
-                javaScriptEnabled
-                domStorageEnabled
-                originWhitelist={['*']}
-                allowsInlineMediaPlayback
-                setSupportMultipleWindows={false}
-              />
-              {webViewLoading ? (
-                <View style={styles.mapLoadingOverlay} pointerEvents="none">
-                  <ActivityIndicator size="large" color={colors.primary} />
-                </View>
-              ) : null}
-            </View>
-          ) : (
-            <View style={styles.emptyMapState}>
-              <Ionicons name="map-outline" size={36} color={colors.textSecondary} />
-              <Text style={styles.emptyMapTitle}>Map preview unavailable</Text>
-              <Text style={styles.emptyMapText}>
-                This parking lot does not have a Google Maps embed link configured yet. Ask an admin to paste the iframe
-                from Google Maps → Share → Embed a map.
-              </Text>
-            </View>
-          )}
+          <View style={styles.emptyMapState}>
+            <Ionicons name="map-outline" size={36} color={colors.textSecondary} />
+            <Text style={styles.emptyMapTitle}>Map preview removed</Text>
+            <Text style={styles.emptyMapText}>
+              This screen now focuses on parking availability and directions instead of the live map preview.
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

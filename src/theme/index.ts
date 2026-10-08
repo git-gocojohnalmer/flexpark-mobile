@@ -1,24 +1,28 @@
 import { Platform } from 'react-native';
 
 export const colors = {
-  background: '#F4F7FB',
+  background: '#F8FAFC',
   surface: '#FFFFFF',
-  surfaceMuted: '#F8FAFC',
-  primary: '#2563EB',
-  primaryPressed: '#1D4ED8',
+  surfaceMuted: '#F1F5F9',
+  primary: '#F97316',
+  primaryPressed: '#EA580C',
   text: '#0F172A',
-  textSecondary: '#64748B',
+  textSecondary: '#475569',
   border: '#E2E8F0',
   success: '#16A34A',
   successLight: '#DCFCE7',
   danger: '#DC2626',
   dangerLight: '#FEE2E2',
-  warning: '#CA8A04',
-  warningLight: '#FEF9C3',
+  warning: '#C2410C',
+  warningLight: '#FFEDD5',
   shadow: '#0F172A',
   white: '#FFFFFF',
   card: '#FFFFFF',
   muted: '#64748B',
+  dark: '#0F172A',
+  darkSoft: '#1E293B',
+  slate: '#334155',
+  orangeSoft: '#FFF7ED',
 };
 
 export const spacing = {

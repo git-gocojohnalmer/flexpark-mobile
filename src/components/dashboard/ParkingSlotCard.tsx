@@ -30,18 +30,14 @@ const ParkingSlotCard = ({
         <View style={styles.titleSection}>
           <View style={styles.locationIconWrap}>
             <Ionicons
-              color={colors.primary}
+              color={colors.slate}
               name="car-sport-outline"
               size={20}
             />
           </View>
 
           <View style={styles.titleTextWrap}>
-            <Text style={styles.eyebrow}>FleXpark Hub</Text>
             <Text style={styles.locationName}>{slot.locationName}</Text>
-            <Text style={styles.subcopy}>
-              {isAvailable ? 'Spaces ready for arrival' : 'Currently operating at full demand'}
-            </Text>
           </View>
         </View>
 
@@ -87,16 +83,6 @@ const ParkingSlotCard = ({
             <Text style={styles.metricLabel}>Distance</Text>
           </View>
           <Text style={styles.metricValue}>{slot.distance}</Text>
-          <Text style={styles.metricHint}>From your current route</Text>
-        </View>
-
-        <View style={styles.metricCard}>
-          <View style={styles.metricLabelRow}>
-            <Feather color={colors.textSecondary} name="credit-card" size={14} />
-            <Text style={styles.metricLabel}>Rate</Text>
-          </View>
-          <Text style={styles.metricValue}>{slot.rate}</Text>
-          <Text style={styles.metricHint}>Transparent parking fee</Text>
         </View>
       </View>
 
@@ -152,7 +138,7 @@ const ParkingSlotCard = ({
           ]}
         >
           <Feather color={colors.primary} name="navigation" size={16} />
-          <Text style={styles.linkText}>View Map</Text>
+          <Text style={styles.linkText}>Open in Google Maps</Text>
         </Pressable>
       </View>
     </View>
@@ -195,24 +181,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 2,
   },
-  eyebrow: {
-    color: colors.primary,
-    fontSize: typography.caption,
-    fontWeight: '700',
-    letterSpacing: 0.6,
-    marginBottom: 4,
-    textTransform: 'uppercase',
-  },
   locationName: {
     color: colors.text,
     fontSize: 19,
     fontWeight: '800',
-    marginBottom: 4,
-  },
-  subcopy: {
-    color: colors.textSecondary,
-    fontSize: typography.body,
-    lineHeight: 20,
   },
   statusPill: {
     alignItems: 'center',
@@ -261,7 +233,6 @@ const styles = StyleSheet.create({
   },
   metricsRow: {
     flexDirection: 'row',
-    gap: spacing.sm,
     marginBottom: spacing.md,
   },
   metricCard: {
@@ -288,11 +259,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '800',
     marginBottom: 4,
-  },
-  metricHint: {
-    color: colors.textSecondary,
-    fontSize: typography.caption,
-    lineHeight: 18,
   },
   availabilityCard: {
     backgroundColor: colors.background,
@@ -343,7 +309,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   progressFill: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.darkSoft,
     borderRadius: radius.pill,
     height: '100%',
   },
@@ -371,11 +337,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   viewSlotsButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.dark,
   },
   linkButton: {
     backgroundColor: colors.surface,
-    borderColor: colors.primary,
+    borderColor: colors.slate,
     borderWidth: 1,
   },
   viewSlotsText: {
@@ -385,13 +351,13 @@ const styles = StyleSheet.create({
     marginLeft: spacing.xs,
   },
   linkText: {
-    color: colors.primary,
+    color: colors.slate,
     fontSize: 14,
     fontWeight: '800',
     marginLeft: spacing.xs,
   },
   primaryPressed: {
-    backgroundColor: colors.primaryPressed,
+    backgroundColor: colors.darkSoft,
   },
   secondaryPressed: {
     backgroundColor: colors.background,

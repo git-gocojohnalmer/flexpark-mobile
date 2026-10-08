@@ -122,6 +122,35 @@ export const buildMapsUrl = (
   return undefined;
 };
 
+export const buildGoogleMapsEmbedUrl = (
+  link?: string,
+  locationName?: string,
+  coordinate?: ParkingCoordinate
+): string | undefined => {
+  const normalized = (link ?? '').trim();
+
+  if (normalized) {
+    const decoded = normalized.replace(/&amp;/gi, '&');
+    const srcMatch = decoded.match(/src\s*=\s*(?:"([^"]+)"|'([^']+)')/i);
+    const src = srcMatch?.[1] ?? srcMatch?.[2] ?? decoded;
+    const normalizedUrl = src.trim();
+
+    if (/google\.[a-z.]+\/maps\/(?:embed|preview|place)/i.test(normalizedUrl) || /output=embed/i.test(normalizedUrl)) {
+      return normalizedUrl;
+    }
+  }
+
+  if (coordinate && (coordinate.latitude !== 0 || coordinate.longitude !== 0)) {
+    return `https://www.google.com/maps?q=${coordinate.latitude},${coordinate.longitude}&output=embed`;
+  }
+
+  if (locationName) {
+    return `https://www.google.com/maps?q=${encodeURIComponent(locationName)}&output=embed`;
+  }
+
+  return undefined;
+};
+
 // ── Pure transforms (driven by onValue snapshots) ─────────────────────────────
 
 export const parseActiveLayouts = (
@@ -149,13 +178,15 @@ export const parseActiveLayouts = (
 
 export const mergeStatusesIntoGrid = (
   grid: GridCell[][],
-  statusMap: Record<string, string>
+  statusMap: Record<string, string>,
+  vehicleMap: Record<string, string> = {}
 ): GridCell[][] =>
   grid.map((row) =>
     row.map((cell) => {
       if (cell.type !== 'slot' || !cell.spotId || !cell.spotData) return cell;
       const sd = cell.spotData as unknown as RawSpotData;
       const raw = statusMap[cell.spotId] ?? statusMap[sd.slotId] ?? sd.status;
+      const vehicleType = vehicleMap[cell.spotId] ?? vehicleMap[sd.slotId] ?? sd.vehicleType ?? 'any';
       return {
         ...cell,
         spotData: {
@@ -163,7 +194,7 @@ export const mergeStatusesIntoGrid = (
           slotName: sd.slotName ?? sd.slotId ?? cell.spotId,
           label: sd.label || sd.slotName || sd.slotId || cell.spotId || '?',
           status: normalizeToGridStatus(raw),
-          vehicleType: sd.vehicleType ?? 'any',
+          vehicleType,
         },
       };
     })
@@ -171,7 +202,8 @@ export const mergeStatusesIntoGrid = (
 
 export const extractSpacesFromGrid = (
   grid: GridCell[][],
-  statusMap: Record<string, string>
+  statusMap: Record<string, string>,
+  vehicleMap: Record<string, string> = {}
 ): ParkingSpace[] => {
   const spaces: ParkingSpace[] = [];
   for (const row of grid) {
@@ -179,11 +211,12 @@ export const extractSpacesFromGrid = (
       if (cell.type !== 'slot' || !cell.spotId) continue;
       const sd = (cell.spotData ?? {}) as unknown as RawSpotData;
       const raw = statusMap[cell.spotId] ?? statusMap[sd.slotId] ?? sd.status;
+      const vehicleType = vehicleMap[cell.spotId] ?? vehicleMap[sd.slotId] ?? sd.vehicleType ?? 'any';
       spaces.push({
         id: sd.slotId ?? cell.spotId,
         label: sd.label || sd.slotName || sd.slotId || cell.spotId || '?',
         status: normalizeToSpaceStatus(raw),
-        vehicleType: sd.vehicleType ?? 'any',
+        vehicleType,
       });
     }
   }

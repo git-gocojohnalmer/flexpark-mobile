@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   input: {
-    backgroundColor: '#F8FBFF',
-    borderColor: '#D7E6F7',
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
     borderRadius: radius.md,
     borderWidth: 1,
     color: colors.text,

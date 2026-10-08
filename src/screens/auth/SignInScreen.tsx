@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Image,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,12 +19,6 @@ import type { AuthStackParamList } from '../../types/navigation';
 import { colors, radius, spacing } from '../../theme';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
-
-const benefits = [
-  { icon: 'flash-outline', label: 'Fast setup' },
-  { icon: 'location-outline', label: 'Nearby parking alerts' },
-  { icon: 'shield-outline', label: 'Protected access' },
-] as const;
 
 const SignInScreen = ({ navigation }: Props) => {
   const { register, isLoading, error, clearError } = useAuth();
@@ -84,28 +79,14 @@ const SignInScreen = ({ navigation }: Props) => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.heroSection}>
-            <View style={styles.heroGlowTop} />
-            <View style={styles.heroGlowBottom} />
-
-            <View style={styles.badge}>
-              <Ionicons name="car-outline" size={14} color={colors.white} />
-              <Text style={styles.badgeText}>City Ready</Text>
+            <View style={styles.brandRow}>
+              <Image source={require('../../../assets/icon.png')} style={styles.brandLogo} />
+              <Text style={styles.brand}>ADPark</Text>
             </View>
-
-            <Text style={styles.brand}>FleXpark</Text>
-            <Text style={styles.title}>Create your smart Parking Account</Text>
+            <Text style={styles.title}>Create an account</Text>
             <Text style={styles.subtitle}>
-              Join FleXpark to reserve access faster and manage your city parking in one place.
+              Set up your profile to manage parking access and availability.
             </Text>
-
-            <View style={styles.benefitList}>
-              {benefits.map((item) => (
-                <View key={item.label} style={styles.benefitChip}>
-                  <Ionicons name={item.icon} size={16} color={colors.white} />
-                  <Text style={styles.benefitText}>{item.label}</Text>
-                </View>
-              ))}
-            </View>
           </View>
 
           <View style={styles.formCard}>
@@ -179,16 +160,16 @@ const SignInScreen = ({ navigation }: Props) => {
             />
 
             <View style={styles.identityCard}>
-              <Ionicons name="person-circle-outline" size={18} color="#0EA5E9" />
+              <Ionicons name="person-circle-outline" size={18} color={colors.primary} />
               <Text style={styles.identityText}>
                 {fullName
                   ? `Creating account for ${fullName}`
-                  : 'Your name will appear on your FleXpark profile.'}
+                  : 'Your name will appear on your ADPark profile.'}
               </Text>
             </View>
 
             <AppButton
-              title={isLoading ? 'Creating FleXpark account...' : 'Create FleXpark account'}
+              title={isLoading ? 'Creating ADPark account...' : 'Create ADPark account'}
               onPress={handleRegister}
               disabled={isDisabled || isLoading}
               style={styles.primaryButton}
@@ -196,7 +177,7 @@ const SignInScreen = ({ navigation }: Props) => {
 
             {isLoading ? (
               <View style={styles.loadingRow}>
-                <ActivityIndicator size="small" color="#0F766E" />
+                  <ActivityIndicator size="small" color={colors.primary} />
                 <Text style={styles.loadingText}>Setting up your account...</Text>
               </View>
             ) : null}
@@ -221,7 +202,7 @@ const SignInScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#EAF3FF',
+    backgroundColor: colors.background,
   },
   flex: {
     flex: 1,
@@ -230,99 +211,51 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xl,
+    paddingVertical: spacing.lg,
   },
   heroSection: {
     overflow: 'hidden',
-    backgroundColor: '#0F766E',
-    borderRadius: 32,
-    padding: spacing.xl,
-    marginBottom: -18,
-  },
-  heroGlowTop: {
-    position: 'absolute',
-    top: -40,
-    right: -10,
-    width: 150,
-    height: 150,
-    borderRadius: 999,
-    backgroundColor: 'rgba(45, 212, 191, 0.24)',
-  },
-  heroGlowBottom: {
-    position: 'absolute',
-    bottom: -55,
-    left: -30,
-    width: 170,
-    height: 170,
-    borderRadius: 999,
-    backgroundColor: 'rgba(56, 189, 248, 0.16)',
-  },
-  badge: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    backgroundColor: colors.dark,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
     marginBottom: spacing.md,
   },
-  badgeText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.4,
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  brandLogo: {
+    borderRadius: 8,
+    marginRight: spacing.sm,
+    height: 34,
+    width: 34,
   },
   brand: {
     color: colors.white,
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '800',
-    letterSpacing: 1.1,
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
-    marginBottom: spacing.sm,
   },
   title: {
     color: colors.white,
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: '800',
-    lineHeight: 37,
+    lineHeight: 34,
     marginBottom: spacing.sm,
   },
   subtitle: {
-    color: 'rgba(255,255,255,0.9)',
-    fontSize: 15,
-    lineHeight: 23,
-    marginBottom: spacing.lg,
-  },
-  benefitList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  benefitChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
-  benefitText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: '600',
+    color: 'rgba(255,255,255,0.72)',
+    fontSize: 14,
+    lineHeight: 20,
   },
   formCard: {
     backgroundColor: colors.card,
-    borderRadius: 28,
-    padding: spacing.xl,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.1,
-    shadowRadius: 24,
-    elevation: 6,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    padding: spacing.lg,
   },
   formHeader: {
     marginBottom: spacing.md,
@@ -364,7 +297,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.orangeSoft,
+    borderColor: '#FED7AA',
+    borderWidth: 1,
     borderRadius: radius.lg,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
@@ -372,7 +307,7 @@ const styles = StyleSheet.create({
   },
   identityText: {
     flex: 1,
-    color: '#0369A1',
+    color: colors.slate,
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '600',
